@@ -1,7 +1,6 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { Caveat_Brush, Hachi_Maru_Pop } from "next/font/google";
-
 import {
   Card,
   CardContent,
@@ -9,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -271,6 +269,7 @@ export default function RegisterPage() {
             </div>
           </CardContent>
         </Card>
+
 
         {/* Small footer */}
         <p className="mt-6 text-center text-xs text-[#A47C72]">
