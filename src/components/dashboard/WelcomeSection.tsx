@@ -1,9 +1,10 @@
 "use client";
 import { Caveat_Brush } from "next/font/google";
-import { Button } from "@/components/ui/button";
+//import { Button } from "@/components/ui/button";
 import { AboutDialog } from "./AboutDialog";
 import { useState } from "react"
 import { CreateAlbumDialog } from "./CreateAlbumDialog";
+import Image from "next/image";
 
 const caveatBrush = Caveat_Brush({
   weight: "400",
@@ -13,9 +14,9 @@ const caveatBrush = Caveat_Brush({
 export function WelcomeSection() {
   const [createAlbumOpen, setCreateAlbumOpen] = useState(false);
   return (
-    <section className="mb-16">
+    <section className="mb-8">
       <div className="max-w-2xl">
-        <h1
+        <h2
           className={`${caveatBrush.className} text-5xl leading-tight md:text-6xl`}
           style={{ color: "#552619" }}
         >
@@ -28,21 +29,67 @@ export function WelcomeSection() {
           </span>
 
           <span className="block">Digital Album.</span>
-        </h1>
+        </h2>
 
         <p className="mt-5 max-w-xl text-sm leading-6 text-[#8B665B]">
-          Create albums, add your favorite photographs, and turn
-          your memories into something you'll love looking back on.
+          Create albums, add your favorite photographs, 
+          <br />  turn your memories into something you'll love looking back on.
         </p>
 
-        <Button
-          type="button"
-          onClick={() => setCreateAlbumOpen(true)}
-          className="mt-7 h-11 w-40 rounded-lg text-sm font-medium text-white shadow-sm transition-all hover:opacity-90"
-          style={{ backgroundColor: "#B2456E" }}
-        >
-          Create Album
-        </Button>
+        <div className="relative mt-7 inline-block">
+  <button
+    type="button"
+    onClick={() => setCreateAlbumOpen(true)}
+    aria-label="Create a new album"
+    className="group cursor-pointer border-0 bg-transparent p-0"
+  >
+    <Image
+      src="/stickers/button.png"
+      alt=""
+      width={90}
+      height={90}
+      priority
+      className="
+        transition-all
+        duration-200
+        group-hover:scale-105
+        group-active:scale-95
+      "
+    />
+  </button>
+
+  <span
+    className="
+      pointer-events-none
+      absolute
+      inset-0
+      flex
+      flex-col
+      items-center
+      justify-center
+      text-sm
+      font-bold
+      leading-tight
+      text-[#FBEAE7]
+    "
+  >
+    <span 
+    className="-translate-y-2"
+     style={{
+      WebkitTextStroke: "1.5px #B2456E",
+      paintOrder: "stroke fill",
+    }}>
+      Create
+      </span>
+    <span
+     style={{
+      WebkitTextStroke: "1.5px #B2456E",
+      paintOrder: "stroke fill",
+    }}
+    >Album
+    </span>
+  </span>
+</div>
 
         <CreateAlbumDialog
         open={createAlbumOpen}

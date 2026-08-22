@@ -26,9 +26,9 @@ export function AlbumCard({
   coverImage,
 }: AlbumCardProps) {
   return (
-    <article className="group">
+    <article className="group w-full max-w-70">
       {/* Album Cover */}
-      <div className="relative aspect-square overflow-hidden rounded-sm bg-[#EED2CC] shadow-md transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
+      <div className="relative aspect-square overflow-hidden rounded-4xl bg-[#EED2CC] shadow-md transition duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
   <Link
     href={`/albums/${slug}`}
     className="absolute inset-0 z-10"
@@ -36,22 +36,20 @@ export function AlbumCard({
   />
 
   {coverImage ? (
-    <Image
-      src={coverImage}
-      alt={`${title} album cover`}
-      fill
-      className="object-cover transition duration-500 group-hover:scale-105"
-    />
-  ) : (
-    <div className="flex h-full items-center justify-center">
-      <span className="text-sm text-[#9A756B]">
-        Cover photo
-      </span>
-    </div>
-  )}
-        {/* Gradient */}
-        <div className="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-black/50 to-transparent" />
-
+  <Image
+    src={coverImage}
+    alt={`${title} album cover`}
+    fill
+    className="object-cover transition duration-500 group-hover:scale-105"
+  />
+) : (
+  <div className="grainy flex h-full items-center justify-center">
+    <span className="relative z-10 text-sm italic text-[#6B4A3D]">
+      cover?
+    </span>
+  </div>
+)}
+        
         {/* Album title */}
         <h3 className="absolute left-5 top-5 max-w-[70%] text-lg font-semibold text-white drop-shadow-md">
           {title}
@@ -60,10 +58,23 @@ export function AlbumCard({
         {/* Album actions */}
         <div className="absolute right-4 top-4 z-20">
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-[#552619] shadow-sm backdrop-blur-sm transition hover:bg-white focus:outline-none">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Album actions</span>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+            className="
+            flex
+            h-8
+            w-8
+            items-center
+            justify-center
+            rounded-md
+           text-white
+           transition
+          hover:bg-black/10
+           focus:outline-none
+           "
+          >
+          <MoreHorizontal className="h-5 w-5 drop-shadow-md" />
+            <span className="sr-only">Album actions</span>
+          </DropdownMenuTrigger>
 
             <DropdownMenuContent
               align="end"
@@ -114,7 +125,7 @@ export function AlbumCard({
       </div>
 
       {/* Metadata */}
-      <div className="mt-3 flex items-center justify-between">
+      <div className="mt-3 flex items-center justify-between opacity-0 transition duration-300 group-hover:opacity-100">
         <p className="text-xs text-[#8B665B]">
           {photoCount} {photoCount === 1 ? "photo" : "photos"}
         </p>

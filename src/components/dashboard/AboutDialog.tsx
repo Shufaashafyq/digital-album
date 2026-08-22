@@ -58,8 +58,14 @@ export function AboutDialog() {
             <br />
             Thousands of photos we take just end up laying in our phone's
             camera rolls. I just do not bring myself to create albums and
-            categorize my pics in albums. I imagine it must be the same for
-            everyone else.
+            categorize my pics in albums in my camera roll. I imagine it must be 
+            the same for everyone else.
+            <br />
+            <br />
+            So this is for the people who did not get to have a childhood photo ablum 
+            and for the people who wanna cherish their memories in a more meaningful 
+            way honoring a part of their childhood, past, and present.
+
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

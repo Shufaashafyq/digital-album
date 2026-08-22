@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { ImagePlus } from "lucide-react";
+import { Camera, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -31,8 +31,27 @@ export function PhotoUploader({
       event.target.files ?? []
     );
 
-    setFiles(selectedFiles);
+    setFiles((currentFiles) => {
+      const existingKeys = new Set(
+        currentFiles.map(
+          (file) =>
+            `${file.name}-${file.size}-${file.lastModified}`
+        )
+      );
+
+      const newFiles = selectedFiles.filter((file) => {
+        const key = `${file.name}-${file.size}-${file.lastModified}`;
+
+        return !existingKeys.has(key);
+      });
+
+      return [...currentFiles, ...newFiles];
+    });
+
     setError("");
+
+    
+    event.target.value = "";
   };
 
   const uploadToCloudinary = async (
@@ -77,7 +96,7 @@ export function PhotoUploader({
 
   const handleUpload = async () => {
     if (files.length === 0) {
-      setError("Please choose at least one photo.");
+      setError("Choose at least one photo.");
       return;
     }
 
@@ -134,60 +153,72 @@ export function PhotoUploader({
   };
 
   return (
-    <div className="mt-8 rounded-2xl border border-[#E8C9C3] bg-white/60 p-5">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold text-[#552619]">
-            Add photos
-          </p>
-
-          <p className="mt-1 text-xs text-[#8B665B]">
-            Choose one or several memories from your device.
-          </p>
+    <div className="flex flex-col items-center">
+      {/* Add memories tab */}
+      <label
+        className="
+          group
+          flex
+          h-10
+          cursor-pointer
+          items-center
+          gap-1.5
+          rounded-r-lg
+          rounded-l-md
+          border
+          border-[#D8BFAF]
+          bg-[#FFF9F7]
+          px-3
+          shadow-md
+          transition-all
+          hover:-translate-x-1
+          hover:shadow-lg
+        "
+      >
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#F2DDD8] text-[#B2456E] transition group-hover:scale-105">
+          <Camera className="h-4 w-4" />
         </div>
 
-        <div className="flex items-center gap-3">
-          <label className="flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-[#E8C9C3] bg-white px-4 text-sm font-medium text-[#552619] transition hover:bg-[#FFF5F3]">
-            <ImagePlus className="h-4 w-4 text-[#B2456E]" />
-            Choose photos
+        <span className="whitespace-nowrap text-xs font-medium text-[#552619] transition group-hover:text-[#B2456E]">
+          Add memories
+        </span>
 
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={handleFileChange}
+        />
+      </label>
+
+      {/* Selected photos */}
+      {files.length > 0 && (
+        <div className="mt-2 w-52 rounded-xl border border-[#E8C9C3] bg-[#FFF9F7] p-3 shadow-md">
+          <p className="text-xs text-[#8B665B]">
+            {files.length} photo
+            {files.length === 1 ? "" : "s"} selected
+          </p>
 
           <Button
             type="button"
-            disabled={loading || files.length === 0}
+            disabled={loading}
             onClick={handleUpload}
-            className="h-10 rounded-lg px-5 text-sm font-medium text-white"
-            style={{ backgroundColor: "#B2456E" }}
+            className="mt-2 h-9 w-full rounded-lg bg-[#B2456E] text-xs text-white hover:opacity-90"
           >
-            {loading
-              ? "Uploading..."
-              : `Add ${files.length || ""} photo${
-                  files.length === 1 ? "" : "s"
-                }`}
+            <Upload className="mr-1.5 h-3.5 w-3.5" />
+            {loading ? "Adding..." : "Add to album"}
           </Button>
         </div>
-      </div>
-
-      {files.length > 0 && (
-        <p className="mt-3 text-xs text-[#8B665B]">
-          {files.length} photo
-          {files.length === 1 ? "" : "s"} selected
-        </p>
       )}
 
       {error && (
-        <p className="mt-3 rounded-lg bg-[#F2DDD8] px-3 py-2 text-sm text-[#B2456E]">
+        <p className="mt-2 w-52 text-center text-xs text-[#B2456E]">
           {error}
         </p>
       )}
     </div>
   );
 }
+
+//need to change this into d dialog with preview of photos selected
