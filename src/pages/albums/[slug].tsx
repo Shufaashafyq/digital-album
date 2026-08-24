@@ -5,11 +5,11 @@ import type {
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import Image from "next/image";
+import { Caveat_Brush } from "next/font/google";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { PhotoUploader } from "@/components/albums/PhotoUploader";
 import { AlbumBook } from "@/components/albums/AlbumBook";
-import { Caveat_Brush } from "next/font/google";
 
 const caveatBrush = Caveat_Brush({
   weight: "400",
@@ -24,14 +24,28 @@ type AlbumPageProps = {
     description: string | null;
     theme: string | null;
     coverImage: string | null;
-    photos: {
+
+    pages: {
       id: string;
-      imageUrl: string;
-      caption: string | null;
-      description: string | null;
-      location: string | null;
-      dateTaken: string | null;
-      order: number;
+      pageOrder: number;
+      layout: string;
+
+      photos: {
+        id: string;
+        imageUrl: string;
+        caption: string | null;
+        description: string | null;
+        location: string | null;
+        dateTaken: string | null;
+        order: number;
+
+        x: number | null;
+        y: number | null;
+        width: number | null;
+        height: number | null;
+        rotation: number;
+        zIndex: number;
+      }[];
     }[];
   };
 };
@@ -62,6 +76,7 @@ export const getServerSideProps: GetServerSideProps<
     };
   }
 
+  // Get the album
   const album = await prisma.album.findFirst({
     where: {
       slug,
@@ -74,20 +89,18 @@ export const getServerSideProps: GetServerSideProps<
       description: true,
       theme: true,
       coverImage: true,
-      photos: {
-        orderBy: {
-          order: "asc",
-        },
-        select: {
-          id: true,
-          imageUrl: true,
-          caption: true,
-          description: true,
-          location: true,
-          dateTaken: true,
-          order: true,
+       pages: {
+      orderBy: {
+        pageOrder: "asc",
+      },
+      include: {
+        photos: {
+          orderBy: {
+            order: "asc",
+          },
         },
       },
+    },
     },
   });
 
@@ -99,14 +112,16 @@ export const getServerSideProps: GetServerSideProps<
 
   return {
     props: {
-      album: JSON.parse(JSON.stringify(album)),
-    },
+    album: JSON.parse(JSON.stringify(album)),
+  },
   };
 };
 
 export default function AlbumPage({
   album,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const hasPages = album.pages.length > 0;
+
   return (
     <main
       className="min-h-screen px-8 pt-4 pb-10"
@@ -120,7 +135,7 @@ export default function AlbumPage({
           ← Back to albums
         </Link>
 
-        {album.photos.length === 0 ? (
+        {!hasPages ? (
           <div className="mt-10 rounded-2xl border-2 border-dashed border-[#DDAEA3] bg-white/40 px-6 py-16 text-center">
             <p className="text-sm text-[#8B665B]">
               No photos in this album yet.
@@ -135,65 +150,63 @@ export default function AlbumPage({
         ) : (
           <div className="mt-4 flex justify-center pb-16">
             <div className="relative -translate-x-7">
-             <AlbumBook
-              title={album.title}
-              description={album.description}
-              coverImage={album.coverImage}
-              photos={album.photos}
-            />
+              <AlbumBook
+                title={album.title}
+                description={album.description}
+                coverImage={album.coverImage}
+                pages={album.pages}
+              />
 
-    {/* Album actions */}
-<div className="absolute left-[calc(100%-2px)] top-1/2 z-20 flex -translate-y-1/2 flex-col gap-2">
-  
-  {/* Edit album */}
-   <Link
-  href={`/albums/${album.slug}/edit`}
-  aria-label="Edit album page"
-  className="group relative block"
->
-  <Image
-    src="/stickers/edit-page.png"
-    alt=""
-    width={90}
-    height={90}
-    priority
-    className="
-      transition-all
-      duration-200
-      group-hover:scale-105
-      group-active:scale-95
-    "
-  />
+              {/* Album actions */}
+              <div className="absolute left-[calc(100%-2px)] top-1/2 z-20 flex -translate-y-1/2 flex-col gap-2">
+                {/* Edit album */}
+                <Link
+                  href={`/albums/${album.slug}/edit`}
+                  aria-label="Edit album page"
+                  className="group relative block"
+                >
+                  <Image
+                    src="/stickers/edit-page.png"
+                    alt=""
+                    width={90}
+                    height={90}
+                    priority
+                    className="
+                      transition-all
+                      duration-200
+                      group-hover:scale-105
+                      group-active:scale-95
+                    "
+                  />
 
-  <span
-    className={`
-      ${caveatBrush.className}
-      pointer-events-none
-      absolute
-      inset-0
-      flex
-      -translate-x-3
-      flex-col
-      items-center
-      justify-center
-      text-center
-      text-xl
-      leading-[0.9]
-      text-[#B2456E]
-    `}
-  >
-    <span>Edit</span>
-    <span>Album</span>
-    <span>Page</span>
-  </span>
-</Link>
+                  <span
+                    className={`
+                      ${caveatBrush.className}
+                      pointer-events-none
+                      absolute
+                      inset-0
+                      flex
+                      -translate-x-3
+                      flex-col
+                      items-center
+                      justify-center
+                      text-center
+                      text-xl
+                      leading-[0.9]
+                      text-[#B2456E]
+                    `}
+                  >
+                    <span>Edit</span>
+                    <span>Album</span>
+                    <span>Page</span>
+                  </span>
+                </Link>
 
-  {/* Add memories */}
-  <PhotoUploader albumId={album.id} />
-
-</div>
-  </div>
-</div>
+                {/* Add memories */}
+                <PhotoUploader albumId={album.id} />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </main>

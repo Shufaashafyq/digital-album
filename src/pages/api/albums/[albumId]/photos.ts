@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { prisma } from "@/lib/prisma";
+import { syncAlbumPages } from "@/lib/syncAlbumPages";
 
 type PhotoInput = {
   imageUrl: string;
@@ -89,21 +90,24 @@ export default async function handler(
   const startingOrder = (lastPhoto?.order ?? -1) + 1;
 
   const createdPhotos = await prisma.$transaction(
-    photos.map((photo, index) =>
-      prisma.photo.create({
-        data: {
-          albumId,
-          imageUrl: photo.imageUrl,
-          cloudinaryPublicId: photo.cloudinaryPublicId,
-          caption: photo.caption?.trim() || null,
-          order: startingOrder + index,
-        },
-      })
-    )
-  );
+  photos.map((photo, index) =>
+    prisma.photo.create({
+      data: {
+        albumId,
+        imageUrl: photo.imageUrl,
+        cloudinaryPublicId: photo.cloudinaryPublicId,
+        caption: photo.caption?.trim() || null,
+        order: startingOrder + index,
+      },
+    })
+  )
+);
 
-  return res.status(201).json({
-    success: true,
-    photos: createdPhotos,
-  });
+//rebuild the album pages after adding the photos.
+await syncAlbumPages(albumId);
+
+return res.status(201).json({
+  success: true,
+  photos: createdPhotos,
+});
 }

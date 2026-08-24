@@ -8,15 +8,11 @@ import { Rnd } from "react-rnd";
 type PhotoElementProps = {
   imageUrl: string;
   caption?: string | null;
-
   x?: number;
   y?: number;
-
   width?: number;
   height?: number;
-
   rotation?: number;
-
   onPositionChange?: (x: number, y: number) => void;
   onSizeChange?: (width: number, height: number) => void;
 };
@@ -76,20 +72,20 @@ export function PhotoElement({
         _direction,
         ref,
         _delta,
-        position
+        newPosition
       ) => {
         const newSize = {
           width: ref.offsetWidth,
           height: ref.offsetHeight,
         };
 
-        const newPosition = {
-          x: position.x,
-          y: position.y,
+        const updatedPosition = {
+          x: newPosition.x,
+          y: newPosition.y,
         };
 
         setSize(newSize);
-        setPosition(newPosition);
+        setPosition(updatedPosition);
 
         onSizeChange?.(
           newSize.width,
@@ -97,8 +93,8 @@ export function PhotoElement({
         );
 
         onPositionChange?.(
-          newPosition.x,
-          newPosition.y
+          updatedPosition.x,
+          updatedPosition.y
         );
       }}
       className="group z-10"

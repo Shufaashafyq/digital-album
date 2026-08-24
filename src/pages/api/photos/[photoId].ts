@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { v2 as cloudinary } from "cloudinary";
-
+import { syncAlbumPages } from "@/lib/syncAlbumPages";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { prisma } from "@/lib/prisma";
 
@@ -107,6 +107,7 @@ export default async function handler(
         },
         select: {
           id: true,
+          albumId: true,
           cloudinaryPublicId: true,
         },
       });
@@ -141,6 +142,9 @@ export default async function handler(
           id: photo.id,
         },
       });
+
+      //rebuild album pages(no empty pages, pages compacted, pageOrder rebuilt)
+      await syncAlbumPages(photo.albumId);
 
       return res.status(200).json({
         success: true,
