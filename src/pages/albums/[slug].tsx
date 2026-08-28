@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import Image from "next/image";
 import { Caveat_Brush } from "next/font/google";
+
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { PhotoUploader } from "@/components/albums/PhotoUploader";
@@ -89,18 +90,19 @@ export const getServerSideProps: GetServerSideProps<
       description: true,
       theme: true,
       coverImage: true,
-       pages: {
-      orderBy: {
-        pageOrder: "asc",
-      },
-      include: {
-        photos: {
-          orderBy: {
-            order: "asc",
+
+      pages: {
+        orderBy: {
+          pageOrder: "asc",
+        },
+        include: {
+          photos: {
+            orderBy: {
+              order: "asc",
+            },
           },
         },
       },
-    },
     },
   });
 
@@ -112,8 +114,8 @@ export const getServerSideProps: GetServerSideProps<
 
   return {
     props: {
-    album: JSON.parse(JSON.stringify(album)),
-  },
+      album: JSON.parse(JSON.stringify(album)),
+    },
   };
 };
 
@@ -158,52 +160,71 @@ export default function AlbumPage({
               />
 
               {/* Album actions */}
-              <div className="absolute left-[calc(100%-2px)] top-1/2 z-20 flex -translate-y-1/2 flex-col gap-2">
+              <div
+                className="
+                  absolute
+                  left-[calc(100%-2px)]
+                  top-1/2
+                  z-20
+                  flex
+                  -translate-y-1/2
+                  flex-col
+                  items-center
+                  gap-6
+                "
+              >
                 {/* Edit album */}
-                <Link
-                  href={`/albums/${album.slug}/edit`}
-                  aria-label="Edit album page"
-                  className="group relative block"
-                >
-                  <Image
-                    src="/stickers/edit-page.png"
-                    alt=""
-                    width={90}
-                    height={90}
-                    priority
-                    className="
-                      transition-all
-                      duration-200
-                      group-hover:scale-105
-                      group-active:scale-95
-                    "
-                  />
-
-                  <span
-                    className={`
-                      ${caveatBrush.className}
-                      pointer-events-none
-                      absolute
-                      inset-0
-                      flex
-                      -translate-x-3
-                      flex-col
-                      items-center
-                      justify-center
-                      text-center
-                      text-xl
-                      leading-[0.9]
-                      text-[#B2456E]
-                    `}
+                <div className="h-22.5 w-22.5 shrink-0">
+                  <Link
+                    href={`/albums/${album.slug}/edit`}
+                    aria-label="Edit album page"
+                    className="group relative block h-full w-full"
                   >
-                    <span>Edit</span>
-                    <span>Album</span>
-                    <span>Page</span>
-                  </span>
-                </Link>
+                    <Image
+                      src="/stickers/edit-page.png"
+                      alt=""
+                      width={90}
+                      height={90}
+                      priority
+                      className="
+                        transition-all
+                        duration-200
+                        group-hover:scale-105
+                        group-active:scale-95
+                      "
+                    />
+
+                    <span
+                      className={`
+                        ${caveatBrush.className}
+                        pointer-events-none
+                        absolute
+                        inset-0
+                        flex
+                        -translate-x-0.5
+                        flex-col
+                        items-center
+                        justify-center
+                        text-center
+                        text-xl
+                        leading-[0.9]
+                        text-[#B2456E]
+                      `}
+                    >
+                      <span>Edit</span>
+                      <span>Album</span>
+                      <span>Page</span>
+                    </span>
+                  </Link>
+                </div>
 
                 {/* Add memories */}
-                <PhotoUploader albumId={album.id} />
+                <div className="h-22.5 w-22.5 shrink-0">
+                  <PhotoUploader
+                    albumId={album.id}
+                    sticker
+                  />
+                </div>
               </div>
             </div>
           </div>

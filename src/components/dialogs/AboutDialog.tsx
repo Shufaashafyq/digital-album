@@ -35,7 +35,7 @@ export function AboutDialog() {
 
       <DialogContent className="border-[#E8C9C3] bg-[#FFF9F7] sm:max-w-md">
         <DialogHeader>
-          {/* Title + Camera sticker */}
+          
           <div className="flex items-center gap-4">
             <DialogTitle className="text-2xl text-[#552619]">
               About Digital Album
@@ -56,7 +56,7 @@ export function AboutDialog() {
             this case you do own the physical picture.
             <br />
             <br />
-            Thousands of photos we take just end up laying in our phone's
+            Thousands of photos we take just end up lying in our phone's
             camera rolls. I just do not bring myself to create albums and
             categorize my pics in albums in my camera roll. I imagine it must be 
             the same for everyone else.

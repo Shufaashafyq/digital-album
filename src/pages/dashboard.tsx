@@ -39,6 +39,9 @@ export const getServerSideProps: GetServerSideProps = async (
       id: true,
       title: true,
       slug: true,
+      description: true,
+      theme:true,
+      isPublic: true,
       coverImage: true,
       _count: {
         select: {

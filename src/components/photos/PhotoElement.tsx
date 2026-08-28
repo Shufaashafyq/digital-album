@@ -116,6 +116,7 @@ export function PhotoElement({
             src={imageUrl}
             alt={caption || "Album photograph"}
             fill
+            unoptimized
             className="object-cover"
             sizes="400px"
           />

@@ -45,10 +45,32 @@ export function AlbumBook({
   return (
     <div className="flex justify-center">
       <HTMLFlipBook
-        key={pages
-          .flatMap((page) => page.photos)
-          .map((photo) => photo.id)
-          .join("-")}
+       key={JSON.stringify({
+    title,
+    description,
+    coverImage,
+    pages: pages.map((page) => ({
+      id: page.id,
+      pageOrder: page.pageOrder,
+      layout: page.layout,
+      photos: page.photos.map((photo) => ({
+        id: photo.id,
+        x: photo.x,
+        y: photo.y,
+        width: photo.width,
+        height: photo.height,
+        rotation: photo.rotation,
+        zIndex: photo.zIndex,
+        order: photo.order,
+        imageUrl: photo.imageUrl,
+        caption: photo.caption,
+      })),
+    })),
+  })}
+        //key={pages
+        //  .flatMap((page) => page.photos)
+        //  .map((photo) => photo.id)
+        //  .join("-")}
         width={520}
         height={600}
         size="fixed"
@@ -117,6 +139,7 @@ export function AlbumBook({
                     src={coverImage}
                     alt={`${title} cover`}
                     fill
+                    unoptimized
                     className="object-cover"
                     sizes="400px"
                   />

@@ -1,9 +1,8 @@
 "use client";
 import { Caveat_Brush } from "next/font/google";
-//import { Button } from "@/components/ui/button";
-import { AboutDialog } from "./AboutDialog";
+import { AboutDialog } from "../dialogs/AboutDialog";
 import { useState } from "react"
-import { CreateAlbumDialog } from "./CreateAlbumDialog";
+import { CreateAlbumDialog } from "../dialogs/CreateAlbumDialog";
 import Image from "next/image";
 
 const caveatBrush = Caveat_Brush({
@@ -14,7 +13,7 @@ const caveatBrush = Caveat_Brush({
 export function WelcomeSection() {
   const [createAlbumOpen, setCreateAlbumOpen] = useState(false);
   return (
-    <section className="mb-8">
+    <section className="-mt-18 mb-8">
       <div className="max-w-2xl">
         <h2
           className={`${caveatBrush.className} text-5xl leading-tight md:text-6xl`}

@@ -107,6 +107,7 @@ export const AlbumPage = forwardRef<HTMLDivElement, AlbumPageProps>(
                   src={photo.imageUrl}
                   alt={photo.caption || "Album photograph"}
                   fill
+                  unoptimized
                   className="object-cover"
                   sizes="400px"
                 />
@@ -120,6 +121,7 @@ export const AlbumPage = forwardRef<HTMLDivElement, AlbumPageProps>(
                     src={photo.imageUrl}
                     alt={photo.caption || "Album photograph"}
                     fill
+                    unoptimized
                     className="object-contain"
                     sizes="650px"
                   />
@@ -187,6 +189,7 @@ export const AlbumPage = forwardRef<HTMLDivElement, AlbumPageProps>(
                     src={photo.imageUrl}
                     alt={photo.caption || "Album photograph"}
                     fill
+                    unoptimized
                     className="object-cover"
                     sizes="400px"
                   />
@@ -200,6 +203,7 @@ export const AlbumPage = forwardRef<HTMLDivElement, AlbumPageProps>(
                       src={photo.imageUrl}
                       alt={photo.caption || "Album photograph"}
                       fill
+                      unoptimized
                       className="object-cover"
                       sizes="500px"
                     />
@@ -281,6 +285,7 @@ export const AlbumPage = forwardRef<HTMLDivElement, AlbumPageProps>(
                   "Album photograph"
                 }
                 fill
+                unoptimized
                 className="object-cover"
                 sizes="400px"
               />
@@ -302,6 +307,7 @@ export const AlbumPage = forwardRef<HTMLDivElement, AlbumPageProps>(
                   "Album photograph"
                 }
                 fill
+                unoptimized
                 className="object-cover"
                 sizes="350px"
               />
@@ -388,6 +394,7 @@ export const AlbumPage = forwardRef<HTMLDivElement, AlbumPageProps>(
                 src={photo.imageUrl}
                 alt={photo.caption || "Album photograph"}
                 fill
+                unoptimized
                 className="object-cover"
                 sizes="400px"
               />

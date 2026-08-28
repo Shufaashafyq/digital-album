@@ -1,6 +1,14 @@
-import { FormEvent, useState } from "react";
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { Caveat_Brush, Hachi_Maru_Pop } from "next/font/google";
+import { Caveat_Brush } from "next/font/google";
+import { Eye, EyeClosed, Loader2 } from "lucide-react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
 import {
   Card,
   CardContent,
@@ -17,26 +25,67 @@ const caveatBrush = Caveat_Brush({
   subsets: ["latin"],
 });
 
-const hachiMaruPop = Hachi_Maru_Pop({
-  weight: "400",
-  subsets: ["latin"],
+const registerSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name is required.")
+    .min(2, "Name must be at least 2 characters."),
+
+  email: z
+    .string()
+    .trim()
+    .email("Please enter a valid email address."),
+
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters.")
+    .regex(
+      /[A-Z]/,
+      "Password must contain at least one uppercase letter."
+    )
+    .regex(
+      /[a-z]/,
+      "Password must contain at least one lowercase letter."
+    )
+    .regex(
+      /[0-9]/,
+      "Password must contain at least one number."
+    )
+    .regex(
+      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]/,
+      "Password must contain at least one special character."
+    ),
 });
 
+type RegisterFormValues = z.infer<typeof registerSchema>;
+
 export default function RegisterPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState("");
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: {
+      errors,
+      isSubmitting,
+    },
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    mode: "onBlur",
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    setError("");
-    setSuccess("");
-    setLoading(true);
+  const onSubmit: SubmitHandler<RegisterFormValues> = async (
+    data
+  ) => {
+    setServerError("");
 
     try {
       const response = await fetch("/api/register", {
@@ -45,238 +94,322 @@ export default function RegisterPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
-          email,
-          password,
+          name: data.name.trim(),
+          email: data.email.trim().toLowerCase(),
+          password: data.password,
         }),
       });
 
-      const data = await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Something went wrong.");
+        setServerError(
+          result.error || "Something went wrong."
+        );
+
+        toast.error("Registration failed", {
+          description:
+            result.error ||
+            "Please check your details and try again.",
+        });
+
         return;
       }
 
-      setSuccess(data.message || "Account created successfully!");
+      reset();
+      setServerError("");
 
-      setName("");
-      setEmail("");
-      setPassword("");
-    } catch {
-      setError("Unable to connect to the server.");
-    } finally {
-      setLoading(false);
+      toast.success("Account created successfully!", {
+        description:
+          result.message ||
+          "Welcome to Digital Album.",
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+
+      setServerError(
+        "Unable to connect to the server."
+      );
+
+      toast.error("Registration failed", {
+        description:
+          "Unable to connect to the server. Please try again.",
+      });
     }
-  }
+  };
 
   return (
     <main
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 py-12"
+      className="flex min-h-screen items-center justify-center px-5 py-12"
       style={{ backgroundColor: "#FBEAE7" }}
     >
-    {/* <img
-        src="/stickers/flip_phone.png"
-        alt=""
-        aria-hidden="true"
-        className="absolute left-[25%] top-[27%] w-25 -rotate-12" //positioning the sticker
-        />
-    */}
-     {/*<img
-        src="/stickers/butterfly.png"
-        alt=""
-        aria-hidden="true"
-        className="absolute right-[33%] top-[10%] w-20 rotate-12" //positioning the sticker
-     />
-    */}
-        <img
-        src="/stickers/camera.png"
-        alt=""
-        aria-hidden="true"
-        className="absolute right-[36%] top-[27%] w-27 rotate-5"
-        />     
-
-    {/*  <img
-         src="/stickers/cd.png"
-         alt=""
-         aria-hidden="true"
-         className="absolute bottom-[15%] left-[25%] w-25 -rotate-6"
-        />
-    */}
-    
-      <div className="w-full max-w-md">
-
-        {/* Brand / Heading */}
-        <div className="mb-8 text-center">
+      <div className="w-full max-w-sm">
+        {/* Heading */}
+        <div className="-translate-y-4 mb-5 text-center">
           <p
-            className="mb-3 text-sm font-medium uppercase tracking-[0.25em]"
+            className="mb-1 text-[11px] font-medium uppercase tracking-[0.22em]"
             style={{ color: "#B2456E" }}
           >
             Digital Album
           </p>
 
           <p
-            className={`${caveatBrush.className} mx-auto mt-3 max-w-sm text-2xl`}
+            className={`${caveatBrush.className} mx-auto mt-1 max-w-sm text-[16px] leading-tight`}
             style={{ color: "#B2456E" }}
           >
-             A place for all the memories you never want to forget
+            A place for all the memories
+            <br />
+            you never want to forget
           </p>
         </div>
 
-        {/* Registration Card */}
-        <Card
-          className="border-0 shadow-xl"
-          style={{
-            backgroundColor: "#FFFDFC",
-            boxShadow: "0 20px 50px rgba(85, 38, 25, 0.10)",
-          }}
-        >
-          <CardHeader className="px-8 pb-4 pt-8">
-            <CardTitle
-              className={`${caveatBrush.className} text-center text-4xl font-normal`}
-              style={{ color: "#552619" }}
-            >
-              Create your account
-            </CardTitle>
+        {/* Registration Card + Sticker */}
+        <div className="relative">
+          {/* Sticker */}
+          <img
+            src="/stickers/camera.png"
+            alt=""
+            aria-hidden="true"
+            className="absolute -right-3 -top-5 z-20 w-20 rotate-5"
+          />
 
-            <CardDescription
-              className="tmt-1 text-center text-sm"
-              style={{ color: "#8B665B" }}
-            >
-              Enter your details below.
-            </CardDescription>
-          </CardHeader>
+          {/* Registration Card */}
+          <Card
+            className="border-0 shadow-xl"
+            style={{
+              backgroundColor: "#FFFDFC",
+              boxShadow:
+                "0 20px 50px rgba(85, 38, 25, 0.10)",
+            }}
+          >
+            <CardHeader className="px-7 pb-2 pt-4">
+              <CardTitle
+                className={`${caveatBrush.className} text-center text-4xl font-normal`}
+                style={{ color: "#552619" }}
+              >
+                Create your account
+              </CardTitle>
 
-          <CardContent className="px-8 pb-8">
-            <form onSubmit={handleSubmit} className="space-y-5">
+              <CardDescription
+                className="mt-1 text-center text-xs"
+                style={{ color: "#8B665B" }}
+              >
+                Enter your details below.
+              </CardDescription>
+            </CardHeader>
 
-              {/* Name */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="name"
-                  className="text-sm font-semibold text-[#552619]"
-                  //style={{ color: "#552619" }}
-                >
-                  Name:
-                </Label>
+            <CardContent className="px-7 pb-4">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-3.5"
+                noValidate
+              >
+                {/* Name */}
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="name"
+                    className="text-sm font-medium text-[#552619]"
+                  >
+                    Name
+                  </Label>
 
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="username"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  required
-                  className="h-11 border-[#E8C9C3] bg-[#FBEAE7] shadow-none placeholder:text-[#B9968D] focus-visible:ring-[#B2456E]"
-                />
-              </div>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Username"
+                    autoComplete="name"
+                    disabled={isSubmitting}
+                    aria-invalid={!!errors.name}
+                    {...register("name")}
+                    className={`
+                      h-11
+                      border-[#E8C9C3]
+                      bg-[#FBEAE7]
+                      shadow-none
+                      placeholder:text-[#B9968D]
+                      focus-visible:ring-[#B2456E]
+                      ${
+                        errors.name
+                          ? "border-[#E8A8B5] focus-visible:ring-[#C84B5E]"
+                          : ""
+                      }
+                    `}
+                  />
 
-              {/* Email */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="email"
-                  className="text-sm font-semibold text-[#552619]"
-                  //style={{ color: "#552619" }}
-                >
-                  Email:
-                </Label>
-
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  required
-                  className="h-11 border-[#E8C9C3] bg-[#FBEAE7] shadow-none placeholder:text-[#B9968D] focus-visible:ring-[#B2456E]"
-                />
-              </div>
-
-              {/* Password */}
-              <div className="space-y-2">
-                <Label
-                  htmlFor="password"
-                  className="text-sm font-semibold text-[#552619]"
-                  //style={{ color: "#552619" }}
-                >
-                  Password:
-                </Label>
-
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="At least 8 characters"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  required
-                  className="h-11 border-[#E8C9C3] bg-[#FBEAE7] shadow-none placeholder:text-[#B9968D] focus-visible:ring-[#B2456E]"
-                />
-
-                <p className="text-xs text-[#9A756B]">
-                  Your password must be at least 8 characters.
-                </p>
-              </div>
-
-              {/* Error */}
-              {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-                  <p className="text-sm text-red-700">
-                    {error}
-                  </p>
+                  {errors.name && (
+                    <p className="text-xs text-[#C84B5E]">
+                      {errors.name.message}
+                    </p>
+                  )}
                 </div>
-              )}
 
-              {/* Success */}
-              {success && (
-                <div className="rounded-lg border border-[#B2456E]/20 bg-[#FBEAE7] px-4 py-3">
-                  <p
-                    className="text-sm"
+                {/* Email */}
+                <div className="space-y-1.5">
+                  <Label
+                    htmlFor="email"
+                    className="text-sm font-medium text-[#552619]"
+                  >
+                    Email
+                  </Label>
+
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    disabled={isSubmitting}
+                    aria-invalid={!!errors.email}
+                    {...register("email")}
+                    className={`
+                      h-11
+                      border-[#E8C9C3]
+                      bg-[#FBEAE7]
+                      shadow-none
+                      placeholder:text-[#B9968D]
+                      focus-visible:ring-[#B2456E]
+                      ${
+                        errors.email
+                          ? "border-[#E8A8B5] focus-visible:ring-[#C84B5E]"
+                          : ""
+                      }
+                    `}
+                  />
+
+                  {errors.email && (
+                    <p className="text-xs text-[#C84B5E]">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Password */}
+                <div className="group space-y-1.5">
+                  <Label
+                    htmlFor="password"
+                    className="text-sm font-medium text-[#552619]"
+                  >
+                    Password
+                  </Label>
+
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={
+                        showPassword
+                          ? "text"
+                          : "password"
+                      }
+                      placeholder="At least 8 characters"
+                      autoComplete="new-password"
+                      disabled={isSubmitting}
+                      aria-invalid={!!errors.password}
+                      {...register("password")}
+                      className={`
+                        h-11
+                        border-[#E8C9C3]
+                        bg-[#FBEAE7]
+                        pr-11
+                        shadow-none
+                        placeholder:text-[#B9968D]
+                        focus-visible:ring-[#B2456E]
+                        ${
+                          errors.password
+                            ? "border-[#E8A8B5] focus-visible:ring-[#C84B5E]"
+                            : ""
+                        }
+                      `}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowPassword(
+                          (current) => !current
+                        )
+                      }
+                      disabled={isSubmitting}
+                      aria-label={
+                        showPassword
+                          ? "Hide password"
+                          : "Show password"
+                      }
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8B665B] transition hover:text-[#B2456E] disabled:opacity-50"
+                    >
+                      {showPassword ? (
+                        <Eye className="h-4 w-4" />
+                      ) : (
+                        <EyeClosed className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Password guidance / validation */}
+                  <div className="min-h-8">
+                    {errors.password ? (
+                      <p className="text-xs text-[#C84B5E]">
+                        {errors.password.message}
+                      </p>
+                    ) : (
+                      <p className="pointer-events-none text-[10px] leading-4 text-[#9A756B]/70 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                        Use at least 8 characters with an uppercase
+                        letter, lowercase letter, number, and special
+                        character.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Server Error */}
+                {serverError && (
+                  <div className="rounded-lg border border-[#E8A8B5] bg-[#FBE0E4] px-4 py-3">
+                    <p className="text-sm text-[#9E3A55]">
+                      {serverError}
+                    </p>
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="h-11 w-full rounded-lg text-sm font-medium text-white shadow-sm transition-all hover:opacity-90"
+                  style={{
+                    backgroundColor: "#B2456E",
+                  }}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    "Create account"
+                  )}
+                </Button>
+              </form>
+
+              {/* Login */}
+              <div className="mt-2 border-t border-[#EED9D5] pt-3 text-center">
+                <p className="text-[11px] text-[#8B665B]">
+                  Already have an account?{" "}
+                  <Link
+                    href="/login"
+                    className="font-semibold underline-offset-4 hover:underline"
                     style={{ color: "#B2456E" }}
                   >
-                    {success}
-                  </p>
-                </div>
-              )}
-
-              {/* Submit Button */}
-              <div className="flex w-full justify-center">
-  <Button
-    type="submit"
-    disabled={loading}
-    className="h-11 w-40 rounded-lg text-sm font-medium text-white shadow-sm transition-all hover:opacity-90"
-    style={{ backgroundColor: "#B2456E" }}
-  >
-    {loading ? "Creating account..." : "Create account"}
-  </Button>
-</div>
-            </form>
-
-            {/* Login */}
-            <div className="mt-7 border-t border-[#EED9D5] pt-6 text-center">
-              <p className="text-sm text-[#8B665B]">
-                Already have an account?{" "}
-                <Link
-                  href="/login"
-                  className="font-semibold underline-offset-4 hover:underline"
-                  style={{ color: "#B2456E" }}
-                >
-                  Log in
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
+                    Log in
+                  </Link>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Small footer */}
-        <p className="mt-6 text-center text-xs text-[#A47C72]">
+        <p className="mt-4 text-center text-xs text-[#A47C72]">
           Your memories, beautifully kept.
         </p>
       </div>
     </main>
   );
 }
-

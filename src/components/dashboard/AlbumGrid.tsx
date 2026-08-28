@@ -5,6 +5,9 @@ type Album = {
   title: string;
   slug: string;
   coverImage: string | null;
+  description: string | null;
+  theme: string | null;
+  isPublic: boolean;
   _count: {
     photos: number;
   };
@@ -41,6 +44,9 @@ export function AlbumGrid({ albums }: AlbumGridProps) {
             slug={album.slug}
             photoCount={album._count.photos}
             coverImage={album.coverImage}
+            description={album.description}
+            theme={album.theme}
+            isPublic={album.isPublic}
           />
         ))}
       </div>
