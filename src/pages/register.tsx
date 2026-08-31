@@ -4,11 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { Caveat_Brush } from "next/font/google";
 import { Eye, EyeClosed, Loader2 } from "lucide-react";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import {useForm, type SubmitHandler,} from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
 import {
   Card,
   CardContent,
@@ -19,50 +18,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { signUpSchema } from "@/validations/auth";
 
 const caveatBrush = Caveat_Brush({
   weight: "400",
   subsets: ["latin"],
 });
 
-const registerSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name is required.")
-    .min(2, "Name must be at least 2 characters."),
-
-  email: z
-    .string()
-    .trim()
-    .email("Please enter a valid email address."),
-
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters.")
-    .regex(
-      /[A-Z]/,
-      "Password must contain at least one uppercase letter."
-    )
-    .regex(
-      /[a-z]/,
-      "Password must contain at least one lowercase letter."
-    )
-    .regex(
-      /[0-9]/,
-      "Password must contain at least one number."
-    )
-    .regex(
-      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]/,
-      "Password must contain at least one special character."
-    ),
-});
-
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type RegisterFormValues = z.infer<
+  typeof signUpSchema
+>;
 
 export default function RegisterPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [serverError, setServerError] = useState("");
+  const [showPassword, setShowPassword] =
+    useState(false);
+
+  const [serverError, setServerError] =
+    useState("");
 
   const {
     register,
@@ -73,8 +45,8 @@ export default function RegisterPage() {
       isSubmitting,
     },
   } = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
-    mode: "onBlur",
+    resolver: zodResolver(signUpSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       email: "",
@@ -82,29 +54,35 @@ export default function RegisterPage() {
     },
   });
 
-  const onSubmit: SubmitHandler<RegisterFormValues> = async (
-    data
-  ) => {
+  const onSubmit: SubmitHandler<
+    RegisterFormValues
+  > = async (data) => {
     setServerError("");
 
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name.trim(),
-          email: data.email.trim().toLowerCase(),
-          password: data.password,
-        }),
-      });
+      const response = await fetch(
+        "/api/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: data.name.trim(),
+            email: data.email
+              .trim()
+              .toLowerCase(),
+            password: data.password,
+          }),
+        }
+      );
 
       const result = await response.json();
 
       if (!response.ok) {
         setServerError(
-          result.error || "Something went wrong."
+          result.error ||
+            "Something went wrong."
         );
 
         toast.error("Registration failed", {
@@ -118,44 +96,60 @@ export default function RegisterPage() {
 
       reset();
       setServerError("");
+      setShowPassword(false);
 
-      toast.success("Account created successfully!", {
-        description:
-          result.message ||
-          "Welcome to Digital Album.",
-      });
+      toast.success(
+        "Account created successfully!",
+        {
+          description:
+            result.message ||
+            "Welcome to Digital Album.",
+        }
+      );
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error(
+        "Registration error:",
+        error
+      );
 
       setServerError(
         "Unable to connect to the server."
       );
 
-      toast.error("Registration failed", {
-        description:
-          "Unable to connect to the server. Please try again.",
-      });
+      toast.error(
+        "Registration failed",
+        {
+          description:
+            "Unable to connect to the server. Please try again.",
+        }
+      );
     }
   };
 
   return (
     <main
       className="flex min-h-screen items-center justify-center px-5 py-12"
-      style={{ backgroundColor: "#FBEAE7" }}
+      style={{
+        backgroundColor: "#FBEAE7",
+      }}
     >
       <div className="w-full max-w-sm">
         {/* Heading */}
         <div className="-translate-y-4 mb-5 text-center">
           <p
             className="mb-1 text-[11px] font-medium uppercase tracking-[0.22em]"
-            style={{ color: "#B2456E" }}
+            style={{
+              color: "#B2456E",
+            }}
           >
             Digital Album
           </p>
 
           <p
             className={`${caveatBrush.className} mx-auto mt-1 max-w-sm text-[16px] leading-tight`}
-            style={{ color: "#B2456E" }}
+            style={{
+              color: "#B2456E",
+            }}
           >
             A place for all the memories
             <br />
@@ -185,14 +179,18 @@ export default function RegisterPage() {
             <CardHeader className="px-7 pb-2 pt-4">
               <CardTitle
                 className={`${caveatBrush.className} text-center text-4xl font-normal`}
-                style={{ color: "#552619" }}
+                style={{
+                  color: "#552619",
+                }}
               >
                 Create your account
               </CardTitle>
 
               <CardDescription
                 className="mt-1 text-center text-xs"
-                style={{ color: "#8B665B" }}
+                style={{
+                  color: "#8B665B",
+                }}
               >
                 Enter your details below.
               </CardDescription>
@@ -221,8 +219,7 @@ export default function RegisterPage() {
                     disabled={isSubmitting}
                     aria-invalid={!!errors.name}
                     {...register("name")}
-                    className={`
-                      h-11
+                    className={`h-11
                       border-[#E8C9C3]
                       bg-[#FBEAE7]
                       shadow-none
@@ -324,7 +321,8 @@ export default function RegisterPage() {
                       type="button"
                       onClick={() =>
                         setShowPassword(
-                          (current) => !current
+                          (current) =>
+                            !current
                         )
                       }
                       disabled={isSubmitting}
@@ -395,7 +393,9 @@ export default function RegisterPage() {
                   <Link
                     href="/login"
                     className="font-semibold underline-offset-4 hover:underline"
-                    style={{ color: "#B2456E" }}
+                    style={{
+                      color: "#B2456E",
+                    }}
                   >
                     Log in
                   </Link>

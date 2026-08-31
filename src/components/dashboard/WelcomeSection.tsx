@@ -11,7 +11,9 @@ const caveatBrush = Caveat_Brush({
 });
 
 export function WelcomeSection() {
+  
   const [createAlbumOpen, setCreateAlbumOpen] = useState(false);
+
   return (
     <section className="-mt-18 mb-8">
       <div className="max-w-2xl">
@@ -36,12 +38,12 @@ export function WelcomeSection() {
         </p>
 
         <div className="relative mt-7 inline-block">
-  <button
-    type="button"
-    onClick={() => setCreateAlbumOpen(true)}
-    aria-label="Create a new album"
-    className="group cursor-pointer border-0 bg-transparent p-0"
-  >
+          <button
+            type="button"
+            onClick={() => setCreateAlbumOpen(true)}
+            aria-label="Create a new album"
+            className="group cursor-pointer border-0 bg-transparent p-0"
+           >
     <Image
       src="/stickers/button.png"
       alt=""

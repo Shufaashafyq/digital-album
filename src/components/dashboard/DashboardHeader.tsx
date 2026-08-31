@@ -15,11 +15,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ProfileDialog } from "@/components/dialogs/ProfileDialog";
+import { SettingsDialog } from "@/components/dialogs/SettingsDialog";
 
 export function DashboardHeader() {
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [profileImage, setProfileImage] =
-    useState<string | null>(null);
+  const [profileImage, setProfileImage] =useState<string | null>(null);
 
   useEffect(() => {
     const loadProfileImage = async () => {
@@ -110,6 +111,7 @@ export function DashboardHeader() {
 
             <DropdownMenuItem
               className="cursor-pointer font-medium text-[#552619] focus:bg-white/20 focus:text-[#552619]"
+              onClick={() => setSettingsOpen(true)}
             >
               <Settings className="h-4 w-4" />
               Settings
@@ -133,6 +135,10 @@ export function DashboardHeader() {
         onOpenChange={setProfileOpen}
         onProfileUpdated={handleProfileUpdated}
       />
+
+      <SettingsDialog
+      open={settingsOpen}
+      onOpenChange={setSettingsOpen}/>
     </header>
   );
 }
