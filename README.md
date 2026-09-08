@@ -1,40 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+DIGITAL ALBUM
 
-## Getting Started
+## About 
 
-First, run the development server:
+Digital Album is inspired by the experience of looking through a physical Photo Album and reliving the memories captured in them. The idea is to recreate that feeling in a digital space by allowing users to create and customize albums that resemble traditional photo albums, to recreate the feeling of flipping through a physical Photo Album book but digitally.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Instead of simply storing photos, users can organize their memories into photo collections that mean something to them. 
+For example, you wanna create an album to store the pictures you took during your vacation, then you can come back and reminisce that particular trip or time of your life.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Users can create distinct albums, give them names, add photos that fit each album's theme, and include captions/descriptions to tell the story behind each photo.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+-------------------------------------------------
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Features
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+# User registration and authentication
+-Create account, login using existing user account
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Customize album covers
+-Create and manage photo albums
+-Upload and organize photos on pages 
 
-## Learn More
+# Photo management
+-Upload and store images using Cloudinary
+-Add descriptions/captions to photos
+-Edit and delete photo captions
 
-To learn more about Next.js, take a look at the following resources:
+# Personal user account 
+-Edit user profile information
+-Manage account security settings
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+--------------------------------------------------
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Future Improvements
+-Friend requests
+-Shared albums between friends
+-Additional personalization features (stickers, doodles)
+-Notifications
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
