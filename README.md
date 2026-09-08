@@ -13,19 +13,19 @@ Users can create distinct albums, give them names, add photos that fit each albu
 
 ## Features
 
-# User registration and authentication
+## User registration and authentication
 -Create account, login using existing user account
 
-# Customize album covers
+## Customize album covers
 -Create and manage photo albums
 -Upload and organize photos on pages 
 
-# Photo management
+## Photo management
 -Upload and store images using Cloudinary
 -Add descriptions/captions to photos
 -Edit and delete photo captions
 
-# Personal user account 
+## Personal user account 
 -Edit user profile information
 -Manage account security settings
 
