@@ -63,7 +63,7 @@ export default function DashboardPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <main
-      className="min-h-screen px-8 py-10"
+      className="min-h-screen px-4 py-6 sm:px-8 sm:py-10"
       style={{ backgroundColor: "#FBEAE7" }}
     >
       <div className="mx-auto max-w-6xl">

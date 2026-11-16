@@ -62,14 +62,15 @@ export function PhotoCaption({
 
   if (editing) {
     return (
-      <div className="mt-4 w-full max-w-md space-y-2">
+      <div className="grainy mt-4 w-full max-w-2xl rounded-xl border border-[#E8C9C3] bg-[#EED2CC] p-4 shadow-sm">
         <textarea
           value={caption}
           onChange={(event) => setCaption(event.target.value)}
           placeholder="Write something about this memory..."
-          rows={2}
+          rows={3}
           autoFocus
-          className="w-full resize-none rounded-lg border border-[#E8C9C3] bg-[#FFF9F7] px-3 py-2 text-sm italic text-[#6B4A3D] outline-none placeholder:text-[#B99A91] focus:border-[#B2456E] focus:ring-2 focus:ring-[#B2456E]/20"
+          className="w-full resize-none rounded-lg border border-[#E8C9C3] bg-[#FFF9F7] px-3 py-2.5 text-sm text-[#6B4A3D] outline-none placeholder:text-[#B99A91] focus:border-[#B2456E] focus:ring-2 focus:ring-[#B2456E]/20"
+
         />
 
         {error && (
@@ -105,7 +106,7 @@ export function PhotoCaption({
     <button
       type="button"
       onClick={() => setEditing(true)}
-      className="mt-4 w-full max-w-md text-center"
+      className="mt-4 w-full max-w-none text-center"
     >
       <p
         className={`font-serif text-sm italic transition ${

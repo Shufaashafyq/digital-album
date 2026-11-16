@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { ImagePlus, Lock, Globe, X } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+
 
 type AlbumData = {
   id: string;
@@ -268,15 +268,15 @@ export function CreateAlbumDialog({
         }
       }}
     >
-      <DialogContent className="border-[#E8C9C3] bg-[#FFF9F7] sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle className="text-2xl text-[#552619]">
+      <DialogContent className="border-[#E8C9C3] bg-[#FFF9F7] sm:max-w-sm">
+        <DialogHeader className="gap-0">
+          <DialogTitle className="text-xl text-[#552619] sm:text-2xl">
             {isEditMode
               ? "Edit album"
               : "Create a new album"}
           </DialogTitle>
 
-          <DialogDescription className="text-sm leading-6 text-[#8B665B]">
+          <DialogDescription className="-mt-1 text-sm leading-5 text-[#8B665B]">
             {isEditMode
               ? "Update your album details and save your changes."
               : "Give your memories a little place of their own."}
@@ -285,7 +285,7 @@ export function CreateAlbumDialog({
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-5"
+          className="space-y-2"
         >
           {/* Cover Image */}
           <div className="space-y-2">
@@ -301,7 +301,7 @@ export function CreateAlbumDialog({
                   width={600}
                   height={300}
                   unoptimized
-                  className="h-44 w-full object-cover"
+                  className="h-32 w-full object-cover"
                 />
 
                 <button
@@ -317,9 +317,9 @@ export function CreateAlbumDialog({
             ) : (
               <label
                 htmlFor="cover"
-                className="flex h-36 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#DDAEA3] bg-[#FBEAE7]/50 text-center transition hover:bg-[#FBEAE7]"
+                className="flex h-20 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#DDAEA3] bg-[#FBEAE7]/50 text-center transition hover:bg-[#FBEAE7] sm:h-28"
               >
-                <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-[#F2DDD8] text-[#B2456E]">
+                <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-full bg-[#F2DDD8] text-[#B2456E] sm:mb-3 sm:h-11 sm:w-11">
                   <ImagePlus className="h-5 w-5" />
                 </div>
 
@@ -385,7 +385,7 @@ export function CreateAlbumDialog({
                 setDescription(event.target.value)
               }
               placeholder="A little story about these memories..."
-              rows={3}
+              rows={2}
               disabled={loading}
               className="resize-none border-[#E8C9C3] bg-white text-[#552619] placeholder:text-[#B99A91] focus-visible:ring-[#B2456E]"
             />
@@ -477,13 +477,13 @@ export function CreateAlbumDialog({
           )}
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex justify-end gap-2 pt-1 sm:gap-3 sm:pt-2">
             <Button
               type="button"
               variant="outline"
               disabled={loading}
               onClick={() => onOpenChange(false)}
-              className="h-11 rounded-lg border-[#E8C9C3] bg-white px-5 text-[#552619] hover:bg-[#FFF5F3]"
+              className="h-9 rounded-lg border-[#E8C9C3] bg-white px-4 text-[#552619] hover:bg-[#FFF5F3] sm:h-11 sm:px-5"
             >
               Cancel
             </Button>
@@ -491,7 +491,7 @@ export function CreateAlbumDialog({
             <Button
               type="submit"
               disabled={loading}
-              className="h-11 w-40 rounded-lg text-sm font-medium text-white shadow-sm transition-all hover:opacity-90"
+              className="h-9 w-36 rounded-lg text-sm font-medium text-white shadow-sm transition-all hover:opacity-90 sm:h-11 sm:w-40"
               style={{
                 backgroundColor: "#B2456E",
               }}

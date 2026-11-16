@@ -127,14 +127,13 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Login Card + Sticker */}
-        <div className="relative">
-          {/* Sticker */}
+   
+        <div className="relative">       
           <img
             src="/stickers/flip_phone.png"
             alt=""
             aria-hidden="true"
-            className="absolute left-4 -top-5 z-20 w-20 -rotate-12"
+            className="absolute left-3 -top-5 z-20 w-20 -rotate-12"
           />
 
           {/* Login Card */}

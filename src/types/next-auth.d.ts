@@ -14,4 +14,3 @@ declare module "next-auth/jwt" {
   }
 }
 
-//then use session.user.id when creating albums

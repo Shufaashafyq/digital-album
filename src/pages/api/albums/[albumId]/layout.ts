@@ -119,7 +119,10 @@ export default async function handler(
             zIndex: layout.zIndex,
           },
         })
-      )
+      ),
+      {
+    timeout: 10000,
+     }
     );
 
     return res.status(200).json({

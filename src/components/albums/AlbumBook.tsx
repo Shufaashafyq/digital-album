@@ -1,10 +1,7 @@
 "use client";
-
 import HTMLFlipBook from "react-pageflip";
 import Image from "next/image";
-
 import { AlbumPage } from "./AlbumPage";
-
 type Photo = {
   id: string;
   imageUrl: string;
@@ -13,7 +10,6 @@ type Photo = {
   location: string | null;
   dateTaken: string | null;
   order: number;
-
   x: number | null;
   y: number | null;
   width: number | null;
@@ -21,21 +17,18 @@ type Photo = {
   rotation: number;
   zIndex: number;
 };
-
 type AlbumPageData = {
   id: string;
   pageOrder: number;
   layout: string;
   photos: Photo[];
 };
-
 type AlbumBookProps = {
   title: string;
   pages: AlbumPageData[];
   description: string | null;
   coverImage: string | null;
 };
-
 export function AlbumBook({
   title,
   pages,
@@ -111,27 +104,22 @@ export function AlbumBook({
               className="object-cover"
               sizes="520px"
             />
-
             <div className="absolute inset-0 bg-black/10" />
-
             <div className="relative z-10 flex h-full w-full flex-col items-center px-10 py-12">
               {/* Heading */}
               <div className="w-full text-center">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#552619]">
                   Digital Album
                 </p>
-
                 <h2 className="mt-3 text-4xl font-semibold leading-tight text-[#552619] drop-shadow-md">
                   {title}
                 </h2>
-
                 {description && (
                   <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#552619] drop-shadow">
                     {description}
                   </p>
                 )}
               </div>
-
               {/* Cover image */}
               <div className="relative mt-10 h-[52%] w-[68%] overflow-hidden border border-white/50 bg-[#cab690] shadow-xl">
                 {coverImage ? (
@@ -154,7 +142,6 @@ export function AlbumBook({
             </div>
           </div>
         </div>
-
         {/* Photo pages */}
         {pages.map((page) => (
           <AlbumPage
@@ -170,7 +157,6 @@ export function AlbumBook({
             pageNumber={page.pageOrder}
           />
         ))}
-
         {/* Back cover */}
         <div
           className="flex h-full w-full items-center justify-center"

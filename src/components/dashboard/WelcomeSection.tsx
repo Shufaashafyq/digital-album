@@ -15,10 +15,10 @@ export function WelcomeSection() {
   const [createAlbumOpen, setCreateAlbumOpen] = useState(false);
 
   return (
-    <section className="-mt-18 mb-8">
+    <section className="-mt-6 mb-8 sm:-mt-18">
       <div className="max-w-2xl">
         <h2
-          className={`${caveatBrush.className} text-5xl leading-tight md:text-6xl`}
+          className={`${caveatBrush.className} text-4xl leading-tight sm:text-5xl md:text-6xl`}
           style={{ color: "#552619" }}
         >
           

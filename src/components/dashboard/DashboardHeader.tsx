@@ -16,6 +16,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ProfileDialog } from "@/components/dialogs/ProfileDialog";
 import { SettingsDialog } from "@/components/dialogs/SettingsDialog";
+import { signOut } from "next-auth/react";
+import { toast } from "sonner";
+
 
 export function DashboardHeader() {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -50,8 +53,9 @@ export function DashboardHeader() {
     setProfileImage(user.profileImage);
   };
 
+
   return (
-    <header className="mb-16 flex items-center justify-between">
+    <header className="mb-8 flex items-center justify-between sm:mb-16">
       {/* Logo */}
       <div>
         <p
@@ -70,6 +74,7 @@ export function DashboardHeader() {
               src={profileImage || "/default-pfp.jpg"}
               alt="Profile"
             />
+
 
             <AvatarFallback
               className="text-sm font-medium"
@@ -122,6 +127,11 @@ export function DashboardHeader() {
             <DropdownMenuItem
               variant="destructive"
               className="cursor-pointer font-medium text-[#B2456E] focus:bg-[#B2456E]/10 focus:text-[#B2456E]"
+              onClick={async () => {
+                toast.success("Logged out successfully.");
+                  await signOut({ callbackUrl: "/login" });
+              }}
+              //{() => signOut({ callbackUrl: "/login" })}
             >
               <LogOut className="h-4 w-4" />
               Log out

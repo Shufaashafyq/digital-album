@@ -157,7 +157,6 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Registration Card + Sticker */}
         <div className="relative">
           {/* Sticker */}
           <img
@@ -167,7 +166,6 @@ export default function RegisterPage() {
             className="absolute -right-3 -top-5 z-20 w-20 rotate-5"
           />
 
-          {/* Registration Card */}
           <Card
             className="border-0 shadow-xl"
             style={{
@@ -357,7 +355,6 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                {/* Server Error */}
                 {serverError && (
                   <div className="rounded-lg border border-[#E8A8B5] bg-[#FBE0E4] px-4 py-3">
                     <p className="text-sm text-[#9E3A55]">
@@ -405,7 +402,6 @@ export default function RegisterPage() {
           </Card>
         </div>
 
-        {/* Small footer */}
         <p className="mt-4 text-center text-xs text-[#A47C72]">
           Your memories, beautifully kept.
         </p>

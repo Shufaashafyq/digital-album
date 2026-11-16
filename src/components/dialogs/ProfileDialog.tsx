@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-//import Image from "next/image";
 import { Camera, Save, User } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -269,7 +267,7 @@ export function ProfileDialog({
         }
       }}
     >
-      <DialogContent className="border-[#E8C9C3] bg-[#FFF9F7] sm:max-w-lg">
+      <DialogContent className="border-[#E8C9C3] bg-[#FFF9F7] sm:max-w-sm">
         <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F2DDD8] text-[#B2456E]">

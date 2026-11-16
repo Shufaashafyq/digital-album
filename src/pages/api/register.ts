@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcryptjs";
-
 import { prisma } from "@/lib/prisma";
 import { signUpSchema } from "@/validations/auth";
 
@@ -13,7 +12,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  // Only allow POST requests
+  // Only allow POST requests (for registration)
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed",

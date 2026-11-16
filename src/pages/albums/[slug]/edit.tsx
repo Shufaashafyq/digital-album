@@ -1,5 +1,4 @@
 "use client";
-
 import type {
   GetServerSideProps,
   InferGetServerSidePropsType,
@@ -12,7 +11,6 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import { PhotoElement } from "@/components/photos/PhotoElement";
 import { PhotoCaption } from "@/components/photos/PhotoCaption";
-
 type EditPhoto = {
   id: string;
   imageUrl: string;
@@ -21,7 +19,6 @@ type EditPhoto = {
   location: string | null;
   dateTaken: string | null;
   order: number;
-
   x: number | null;
   y: number | null;
   width: number | null;
@@ -29,14 +26,12 @@ type EditPhoto = {
   rotation: number;
   zIndex: number;
 };
-
 type EditPage = {
   id: string;
   pageOrder: number;
   layout: string;
   photos: EditPhoto[];
 };
-
 type EditAlbumPageProps = {
   album: {
     id: string;
@@ -47,7 +42,6 @@ type EditAlbumPageProps = {
     pages: EditPage[];
   };
 };
-
 type PhotoLayout = {
   photoId: string;
   pageId: string;
@@ -58,7 +52,6 @@ type PhotoLayout = {
   rotation: number;
   zIndex: number;
 };
-
 export const getServerSideProps: GetServerSideProps<
   EditAlbumPageProps
 > = async (context) => {
@@ -67,7 +60,6 @@ export const getServerSideProps: GetServerSideProps<
     context.res,
     authOptions
   );
-
   if (!session?.user?.id) {
     return {
       redirect: {
@@ -76,15 +68,12 @@ export const getServerSideProps: GetServerSideProps<
       },
     };
   }
-
   const slug = context.params?.slug;
-
   if (typeof slug !== "string") {
     return {
       notFound: true,
     };
   }
-
   const album = await prisma.album.findFirst({
     where: {
       slug,
@@ -96,7 +85,6 @@ export const getServerSideProps: GetServerSideProps<
       slug: true,
       description: true,
       coverImage: true,
-
       pages: {
         orderBy: {
           pageOrder: "asc",
@@ -111,13 +99,11 @@ export const getServerSideProps: GetServerSideProps<
       },
     },
   });
-
   if (!album) {
     return {
       notFound: true,
     };
   }
-
   return {
     props: {
       album: JSON.parse(
@@ -126,20 +112,17 @@ export const getServerSideProps: GetServerSideProps<
     },
   };
 };
-
 export default function EditAlbumPage({
   album,
 }: InferGetServerSidePropsType<
   typeof getServerSideProps
 >) {
   const router = useRouter();
-
   const [photoLayouts, setPhotoLayouts] = useState<PhotoLayout[]>(
     album.pages.flatMap((page) =>
       page.photos.map((photo, photoIndex) => ({
         photoId: photo.id,
         pageId: page.id,
-
         x:
           photo.x ??
           (page.photos.length === 1
@@ -147,7 +130,6 @@ export default function EditAlbumPage({
             : photoIndex === 0
               ? 35
               : 270),
-
         y:
           photo.y ??
           (page.photos.length === 1
@@ -155,36 +137,28 @@ export default function EditAlbumPage({
             : photoIndex === 0
               ? 70
               : 150),
-
         width:
           photo.width ??
           (page.photos.length === 1
             ? 320
             : 200),
-
         height:
           photo.height ??
           (page.photos.length === 1
             ? 360
             : 200),
-
         rotation: photo.rotation ?? 0,
         zIndex: photo.zIndex ?? photo.order,
       }))
     )
   );
-
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-
- 
   //Group pages into two-page spreads ( Page 1 + Page 2)
-   
   const spreads: EditPage[][] = [];
   for (let i = 0; i < album.pages.length; i += 2) {
     spreads.push(album.pages.slice(i, i + 2));
   }
-
   const updatePhotoLayout = (
   photoId: string,
   changes: Partial<PhotoLayout>
@@ -200,11 +174,9 @@ export default function EditAlbumPage({
     )
   );
 };
-
 const handleSaveChanges = async () => {
   setSaving(true);
   setSaveError(null);
-
   try {
     const response = await fetch(
       `/api/albums/${album.id}/layout`,
@@ -218,19 +190,15 @@ const handleSaveChanges = async () => {
         }),
       }
     );
-
     const data = await response.json();
-
     if (!response.ok) {
       throw new Error(
         data.error ?? "Failed to save album changes."
       );
     }
-
     await router.push(`/albums/${album.slug}`);
   } catch (error) {
     console.error("Save album changes error:", error);
-
     setSaveError(
       error instanceof Error
         ? error.message
@@ -240,7 +208,6 @@ const handleSaveChanges = async () => {
     setSaving(false);
   }
 };
-
   return (
     <main
       className="min-h-screen px-8 py-6"
@@ -256,22 +223,18 @@ const handleSaveChanges = async () => {
             >
               ← Back to album
             </Link>
-
             <h1 className="mt-4 text-3xl font-semibold text-[#552619]">
               Edit {album.title}
             </h1>
-
             {album.description && (
               <p className="mt-1 max-w-2xl text-sm leading-6 text-[#8B665B]">
                 {album.description}
               </p>
             )}
-
             <p className="mt-2 text-xs text-[#A47C72]">
               Drag and resize your photos to arrange your album.
             </p>
           </div>
-
           <div>
             <button
             type="button"
@@ -294,7 +257,6 @@ const handleSaveChanges = async () => {
           >
             {saving ? "Saving..." : "Save changes"}
           </button>
-
           {saveError && (
             <p className="mt-2 text-xs text-[#B2456E]">
               {saveError}
@@ -302,15 +264,12 @@ const handleSaveChanges = async () => {
           )}
         </div>      
         </div>
-
-        {/* Album spreads */}
         <div className="mt-10 space-y-16">
           {spreads.map((spread, spreadIndex) => (
             <section
               key={`spread-${spreadIndex}`}
               className="flex flex-col items-center"
             >
-              {/* Spread label */}
               <div className="mb-4 flex w-full max-w-265 items-center justify-center">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#A47C72]">
                   Pages{" "}
@@ -320,8 +279,6 @@ const handleSaveChanges = async () => {
                     : ""}
                 </p>
               </div>
-
-              {/* Two-page spread */}
               <div className="flex items-start justify-center">
                 {spread.map((page) => (
                   <div
@@ -341,17 +298,14 @@ const handleSaveChanges = async () => {
                     <span className="absolute bottom-4 right-6 z-40 text-xs text-[#8B665B]">
                       {page.pageOrder}
                     </span>
-
                     {/* Photos */}
                     {page.photos.map((photo) => {
                        const layout = photoLayouts.find(
                          (item) => item.photoId === photo.id
                    );
-
                      if (!layout) {
                        return null;
                     }
-
                     return (
                       <PhotoElement
                         key={photo.id}
@@ -377,7 +331,6 @@ const handleSaveChanges = async () => {
                               />
                              );
                            })}
-
                     {/* Caption area */}
                     {page.photos.length > 0 && (
                       <div className="pointer-events-auto absolute bottom-10 left-8 z-30 max-w-[70%]">
@@ -389,8 +342,6 @@ const handleSaveChanges = async () => {
                     )}
                   </div>
                 ))}
-
-                {/* Empty right page when there is an odd number of pages */}
                 {spread.length === 1 && (
                   <div
                     className="
